@@ -66,3 +66,103 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `npm run build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+
+
+firebase configuration code for reactjs
+
+//firebase-message-sw.js file create into public folder
+
+importScripts("https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/7.5.0/firebase-messaging.js");
+firebase.initializeApp({
+	apiKey: "AIzaSyCK52gDyutrZaZQOtPfUYcLGMhO0-HMmKA",
+  authDomain: "crayond-comp-backend.firebaseapp.com",
+  databaseURL: "https://crayond-comp-backend.firebaseio.com",
+  projectId: "crayond-comp-backend",
+  storageBucket: "crayond-comp-backend.appspot.com",
+  messagingSenderId: "540551646550",
+  appId: "1:540551646550:web:33601a8a79db6f7f3e5af7",
+  measurementId: "G-RMJK5HJL6S"
+});
+const messaging = firebase.messaging();
+messaging.setBackgroundMessageHandler(function(payload) {
+  const promiseChain = clients
+    .matchAll({
+      type: "window",
+      includeUncontrolled: true
+    })
+    .then(windowClients => {
+      for (let i = 0; i < windowClients.length; i++) {
+        const windowClient = windowClients[i];
+        windowClient.postMessage(payload);
+      }
+    })
+    .then(() => {
+      return registration.showNotification("my notification title");
+    });
+  return promiseChain;
+});
+self.addEventListener('notificationclick', function(event) {
+  // do what you want
+  // ...
+});
+
+///gcm id paste in manifest.json
+"gcm_sender_id": "103953800507",
+
+
+//paste index.js main file
+
+export const askForPermissioToReceiveNotifications = async () => {
+  try {
+    const messaging = firebase.messaging();
+    await messaging.requestPermission();
+    const token = await messaging.getToken();
+    console.log('token do usuário:', token);
+    
+    return token;
+  } catch (error) {
+    console.error(error);
+  }
+}
+..............................
+export const firebaseinitial = ()=>{
+  var firebaseConfig = {
+    apiKey: "AIzaSyCK52gDyutrZaZQOtPfUYcLGMhO0-HMmKA",
+    authDomain: "crayond-comp-backend.firebaseapp.com",
+    databaseURL: "https://crayond-comp-backend.firebaseio.com",
+    projectId: "crayond-comp-backend",
+    storageBucket: "crayond-comp-backend.appspot.com",
+    messagingSenderId: "540551646550",
+    appId: "1:540551646550:web:33601a8a79db6f7f3e5af7",
+    measurementId: "G-RMJK5HJL6S"
+  };
+  // Initialize Firebase
+  const fire=firebase.initializeApp(firebaseConfig);
+   const messaging=fire.messaging();
+  // navigator.serviceWorker
+  //   .register('/my-sw.js')
+  //   .then((registration) => {
+  //     firebase.messaging().useServiceWorker(registration);
+  // });
+
+messaging.usePublicVapidKey(
+  // Project Settings => Cloud Messaging => Web Push certificates
+    "BHk7X71x4elCGbA-k9XrvVkY0qJk-k9O01PdHwto4E1amf8fjZk7kM5E2ujky--p1aT81Fg4PGaTPuPijGYrofM"
+  );
+
+}
+
+...................................
+
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("./firebase-messaging-sw.js")
+      .then(function(registration) {
+        console.log("Registration successful, scope is:", registration.scope);
+      })
+      .catch(function(err) {
+        console.log("Service worker registration failed, error:", err);
+      });
+  }

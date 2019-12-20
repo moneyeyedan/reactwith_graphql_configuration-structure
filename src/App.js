@@ -1,25 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+// import RouterApp from './Routers/Index';
+import ApolloGQLclient from './ApolloGQLclient'
+// import AppTheme from './AppThemes';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ApolloGQLclient>
+      {/* <AppTheme>
+        <div className="App">
+          <RouterApp />
+        </div>
+      </AppTheme> */}
+    </ApolloGQLclient>
+
   );
 }
 
